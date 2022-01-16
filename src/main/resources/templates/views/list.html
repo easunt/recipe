@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.min.css}" />
+    <title>음료레시피 서비스</title>
+</head>
+<body>
+<div class="fixed-navbar">
+    <div class="pull-left">
+        <h1 class="page-title">레시피 리스트</h1>
+    </div>
+</div>
+<div id="wrapper">
+    <div class="main-content">
+        <div class="row row-inline-block small-spacing">
+            <div class="col-xs-12">
+                <div class="box-content">
+                    <div class="clearfix">
+                        <h4 class="box-title pull-left"></h4>
+                    </div>
+
+                    <!--/* 페이지 Content 영역 */-->
+                    <div class="input-group" id="adv-search">
+                        <input type="text" id="searchKeyword" class="form-control" placeholder="음료명을 입력해 주세요." style="width: 300px;" />
+                        <button type="button" class="btn btn-primary">
+                            <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+
+                    <!--/* 게시글 영역 */-->
+                    <div class="table-responsive clearfix">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>음료명</th>
+                                <th>등록일</th>
+                            </tr>
+                            </thead>
+
+                            <!--/* 게시글 리스트 Rendering 영역 */-->
+                            <tbody id="list">
+
+                            </tbody>
+                        </table>
+                        <div class="btn_wrap text-right">
+                            <a class="btn btn-primary waves-effect waves-light">Write</a>
+                        </div>
+
+                        <!-- 페이지네이션 Rendering 영역 -->
+                        <nav>
+
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <ul class="list-inline">
+                <li>2022 ©RECIPE</li>
+            </ul>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/scripts/moment.min.js}"></script>
+<script th:src="@{/scripts/jquery.min.js}"></script>
+<script th:src="@{/scripts/main.js}"></script>
+<script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js}"></script>
+
+<!--/* JavaScript 영역 */-->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.onload = () => {
+        findAll()
+    }
+
+    function findAll() {
+        fetch('/api/v1/recipes').then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        }).then(json => {
+            let html = '';
+            if (!json.length || json.length === 0) {
+                html = '<td colspan="5">등록된 게시글이 없습니다.</td>';
+            } else {
+                json.forEach(obj => {
+                    html += `
+							<tr>
+    							<td>${obj.id}</td>
+    							<td class="text-left">
+    								<a href="javascript: void(0);" onclick="goView(${obj.id})">${obj.name}</a>
+    							</td>
+    							<td>${obj.createdAt}</td>
+							</tr>
+						`;
+                });
+            }
+
+            document.getElementById('list').innerHTML = html;
+        });
+    }
+
+    /**
+     * 게시글 조회
+     */
+    function goView(id) {
+        location.href = `/views/detail/${id}`;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

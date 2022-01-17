@@ -23,16 +23,32 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.11.4")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.4")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.11.4")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("mysql:mysql-connector-java")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8") // jdk 확인하
+
+    implementation ("com.jayway.jsonpath:json-path:2.4.0")
+    implementation("com.spotify:docker-client:8.16.0")
+
+    implementation("net.logstash.logback:logstash-logback-encoder:6.6")
+
+    implementation("org.glassfish.jersey.inject:jersey-hk2:2.30")
+    implementation("io.springfox:springfox-swagger2:2.9.2")
+    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+
+    runtimeOnly("mysql:mysql-connector-java:8.0.21")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.min.css}"/>
+    <title>음료레시피 서비스</title>
+</head>
+<body>
+<div class="fixed-navbar">
+    <div class="pull-left">
+        <h1 class="page-title">레시피 리스트</h1>
+    </div>
+</div>
+<div id="wrapper">
+    <div class="main-content">
+        <div class="row row-inline-block small-spacing">
+            <div class="col-xs-12">
+                <div class="box-content">
+                    <div class="clearfix">
+                        <h4 class="box-title pull-left"></h4>
+                    </div>
+
+                    <!--/* 페이지 Content 영역 */-->
+                    <div class="card-content">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">음료명</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="name" class="form-control" placeholder="음료명을 입력해 주세요."/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="materials" class="col-sm-2 control-label">재료</label>
+                                <div class="col-sm-10">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>재료명</th>
+                                            <th>용량</th>
+                                            <th>단위</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="materials">
+                                        <tr>
+                                            <td><input type="text" id="name0" class="form-control"/></td>
+                                            <td><input type="text" id="amount0" class="form-control"/></td>
+                                            <td><input type="text" id="unit0" class="form-control"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <button type="button" onclick="addRow()"
+                                                        class="btn btn-primary waves-effect waves-light">+
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="col-sm-2 control-label">내용</label>
+                                <div class="col-sm-10">
+                                    <textarea id="description" class="form-control"
+                                              placeholder="내용을 입력해 주세요."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="note" class="col-sm-2 control-label">주의점</label>
+                                <div class="col-sm-10">
+                                    <textarea id="note" class="form-control" placeholder="주의점을 입력해 주세요."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="btn_wrap text-center">
+                                <a th:href="@{/views/list}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+                                <button type="button" onclick="create()"
+                                        class="btn btn-primary waves-effect waves-light">저장하기
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <ul class="list-inline">
+                <li>2022 ©RECIPE</li>
+            </ul>
+        </footer>
+    </div>
+</div>
+
+<script th:src="@{/scripts/moment.min.js}"></script>
+<script th:src="@{/scripts/jquery.min.js}"></script>
+<script th:src="@{/scripts/main.js}"></script>
+<script th:src="@{/plugin/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js}"></script>
+
+<!--/* JavaScript 영역 */-->
+<script th:inline="javascript">
+    let count = 2
+
+    function isValidMaterial(material) {
+        let result = true;
+        Object.keys(material).forEach(key => {
+            if (material[key] == null || material[key] === "") {
+                result = false;
+            }
+        });
+
+        return result;
+    }
+
+    function isValidRequestBody(requestBody) {
+        if (requestBody.name == null || requestBody.name === "") {
+            alert("올바르지 않은 음료명입니다.")
+            return false;
+        }
+        if (requestBody.description == null || requestBody.description === "") {
+            alert("올바르지 않은 레시피 내용입니다.")
+            return false;
+        }
+        return true;
+    }
+
+    function create() {
+        let materials = [];
+        let valid = true;
+        for (let idx = 0; idx < count - 1; idx++) {
+            let material = {
+                "name": document.getElementById("name" + idx).value,
+                "amount": document.getElementById("amount" + idx).value,
+                "unit": document.getElementById("unit" + idx).value,
+            }
+            valid = valid && isValidMaterial(material);
+            materials.push(material);
+        }
+
+        if (!valid) {
+            alert("올바르지 않은 재료정보입니다.")
+            return;
+        }
+
+        const requestBody = {
+            name: document.getElementById("name").value,
+            materials: materials,
+            description: document.getElementById("description").value,
+            note: document.getElementById("note").value
+        };
+        if(!(valid && isValidRequestBody(requestBody))) {
+            return;
+        }
+
+        fetch('/api/v1/recipes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Request failed...');
+            }
+
+            alert('저장되었습니다.');
+            location.href = '/views/list';
+
+        }).catch(error => {
+            alert('오류가 발생하였습니다.');
+        });
+    }
+
+    function addRow() {
+        let html = ``;
+        for (let idx = 0; idx < count; idx++) {
+            let name = document.getElementById("name" + idx);
+            let amount = document.getElementById("amount" + idx);
+            let unit = document.getElementById("unit" + idx);
+
+            html += `<tr>
+                        <td><input type="text" id="name${idx}" class="form-control" value=${name == null ? "" : name.value}></td>
+                        <td><input type="text" id="amount${idx}" class="form-control" value=${amount == null ? "" : amount.value}></td>
+                        <td><input type="text" id="unit${idx}" class="form-control" value=${unit == null ? "" : unit.value}></td>
+                     </tr>`;
+        }
+
+        html += `<tr>
+                    <td colspan="3">
+                        <button type="button" onclick="addRow()" class="btn btn-primary waves-effect waves-light">+</button>
+                    </td>
+                 </tr>`
+
+        document.getElementById('materials').innerHTML = html
+        count++
+    }
+</script>
+</body>
+</html>

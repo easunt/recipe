@@ -22,8 +22,13 @@ class ViewController {
     }
 
     @GetMapping("/views/detail/{id}")
-    fun openBoardView(@PathVariable id: Long?, model: Model): String {
+    fun recipeDetailInfo(@PathVariable id: Long?, model: Model): String {
         model.addAttribute("id", id)
         return "views/detail"
+    }
+
+    @GetMapping("/views/edit")
+    fun editRecipe(): String? {
+        return "views/edit"
     }
 }

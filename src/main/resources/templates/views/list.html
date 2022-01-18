@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
-    <meta content="" name="description" />
-    <meta content="" name="author" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.min.css}" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/plugin/mCustomScrollbar/jquery.mCustomScrollbar.min.css}"/>
     <title>음료레시피 서비스</title>
 </head>
 <body>
@@ -27,8 +27,9 @@
 
                     <!--/* 페이지 Content 영역 */-->
                     <div class="input-group" id="adv-search">
-                        <input type="text" id="searchKeyword" class="form-control" placeholder="음료명을 입력해 주세요." style="width: 300px;" />
-                        <button type="button" class="btn btn-primary">
+                        <input type="text" id="searchKeyword" class="form-control" placeholder="음료명을 입력해 주세요."
+                               style="width: 300px;"/>
+                        <button type="button" class="btn btn-primary" onclick="search()">
                             <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
                         </button>
                     </div>
@@ -50,7 +51,8 @@
                             </tbody>
                         </table>
                         <div class="btn_wrap text-right">
-                            <a class="btn btn-primary waves-effect waves-light" href="javascript: void(0);" onclick="goEdit()">신규레시피</a>
+                            <a class="btn btn-primary waves-effect waves-light" href="javascript: void(0);"
+                               onclick="goEdit()">신규레시피</a>
                         </div>
 
                         <!-- 페이지네이션 Rendering 영역 -->
@@ -83,8 +85,14 @@
         findAll()
     }
 
-    function findAll() {
-        fetch('/api/v1/recipes').then(response => {
+    function search() {
+        let searchCondition = document.getElementById('searchKeyword').value
+        findAll(searchCondition)
+    }
+
+    function findAll(searchCondition) {
+        let endpoint = '/api/v1/recipes' + (searchCondition == null ? "" : `?name=${searchCondition}`)
+        fetch(endpoint).then(response => {
             if (response.ok) {
                 return response.json();
             }
@@ -93,10 +101,10 @@
             if (!json.length || json.length === 0) {
                 html = '<td colspan="5">등록된 게시글이 없습니다.</td>';
             } else {
-                json.forEach(obj => {
+                json.forEach((obj, idx) => {
                     html += `
 							<tr>
-    							<td>${obj.id}</td>
+    							<td>${idx+1}</td>
     							<td class="text-left">
     								<a href="javascript: void(0);" onclick="goView(${obj.id})">${obj.name}</a>
     							</td>
@@ -116,8 +124,9 @@
     function goView(id) {
         location.href = `/views/detail/${id}`;
     }
+
     function goEdit() {
-        location.href = 'views/edit';
+        location.href = '/views/edit';
     }
 
     /*]]>*/

@@ -11,7 +11,7 @@ spring:
       idle-timeout: 60000
       max-lifetime: 1800000
       initialization-fail-timeout: 10
-      pool-name: jomalone           # FIXME
+      pool-name: recipe           # FIXME
       data-source-properties:
         useServerPrepStmts: false     # (MYSQL) recommended for performance
         cachePrepStmts: true
@@ -34,7 +34,7 @@ spring:
         show_sql: true
         use_sql_comments: true
         hbm2ddl:
-          auto: create-drop
+          auto: update
     open-in-view: true
 
 server:

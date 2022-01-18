@@ -57,6 +57,9 @@
                                                 <button type="button" onclick="addRow()"
                                                         class="btn btn-primary waves-effect waves-light">+
                                                 </button>
+                                                <button type="button" onclick="deleteRow();"
+                                                        class="btn btn-danger waves-effect waves-light">-
+                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -105,7 +108,7 @@
 
 <!--/* JavaScript 영역 */-->
 <script th:inline="javascript">
-    let count = 2
+    let count = 1
 
     function isValidMaterial(material) {
         let result = true;
@@ -133,7 +136,7 @@
     function create() {
         let materials = [];
         let valid = true;
-        for (let idx = 0; idx < count - 1; idx++) {
+        for (let idx = 0; idx < count; idx++) {
             let material = {
                 "name": document.getElementById("name" + idx).value,
                 "amount": document.getElementById("amount" + idx).value,
@@ -154,7 +157,7 @@
             description: document.getElementById("description").value,
             note: document.getElementById("note").value
         };
-        if(!(valid && isValidRequestBody(requestBody))) {
+        if (!(valid && isValidRequestBody(requestBody))) {
             return;
         }
 
@@ -193,13 +196,45 @@
         }
 
         html += `<tr>
+                    <td><input type="text" id="name${count}" class="form-control"></td>
+                    <td><input type="text" id="amount${count}" class="form-control"></td>
+                    <td><input type="text" id="unit${count}" class="form-control"></td>
+                 </tr>
+                 <tr>
                     <td colspan="3">
                         <button type="button" onclick="addRow()" class="btn btn-primary waves-effect waves-light">+</button>
+                        <button type="button" onclick="deleteRow()" class="btn btn-danger waves-effect waves-light">-</button>
+                    </td>
+                 </tr>`;
+
+        document.getElementById('materials').innerHTML = html;
+        count++;
+    }
+
+    function deleteRow() {
+        if (count === 1) return;
+        count--;
+        let html = ``;
+        for (let idx = 0; idx < count; idx++) {
+            let name = document.getElementById("name" + idx);
+            let amount = document.getElementById("amount" + idx);
+            let unit = document.getElementById("unit" + idx);
+
+            html += `<tr>
+                        <td><input type="text" id="name${idx}" class="form-control" value=${name == null ? "" : name.value}></td>
+                        <td><input type="text" id="amount${idx}" class="form-control" value=${amount == null ? "" : amount.value}></td>
+                        <td><input type="text" id="unit${idx}" class="form-control" value=${unit == null ? "" : unit.value}></td>
+                     </tr>`;
+        }
+
+        html += `<tr>
+                    <td colspan="3">
+                        <button type="button" onclick="addRow()" class="btn btn-primary waves-effect waves-light">+</button>
+                        <button type="button" onclick="deleteRow()" class="btn btn-danger waves-effect waves-light">-</button>
                     </td>
                  </tr>`
 
-        document.getElementById('materials').innerHTML = html
-        count++
+        document.getElementById('materials').innerHTML = html;
     }
 </script>
 </body>

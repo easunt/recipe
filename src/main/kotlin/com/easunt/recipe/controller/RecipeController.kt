@@ -34,7 +34,7 @@ class RecipeController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete() {
-        print("BBB")
+    fun delete(@PathVariable id: Long) {
+        recipeService.delete(id)
     }
 }

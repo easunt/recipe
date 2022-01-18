@@ -9,8 +9,9 @@ import javax.persistence.*
 
 @Entity
 class Recipe(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
     val name: String,
     @Column(columnDefinition = "LONGTEXT")
     @Convert(converter = MaterialListConverter::class)
@@ -21,11 +22,12 @@ class Recipe(
 ) : BaseEntity() {
     companion object {
         fun of(recipeRequestBody: RecipeRequestBody): Recipe {
-            return Recipe(0L, recipeRequestBody.name, recipeRequestBody.materials, recipeRequestBody.description, recipeRequestBody.note)
+            return Recipe(null, recipeRequestBody.name, recipeRequestBody.materials, recipeRequestBody.description, recipeRequestBody.note)
         }
     }
 }
 
 interface RecipeRepository : JpaRepository<Recipe, Long> {
     fun findByNameContains(name: String): List<Recipe>
+    fun findByNameLike(name: String): List<Recipe>
 }

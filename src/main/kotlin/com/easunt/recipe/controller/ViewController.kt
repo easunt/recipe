@@ -27,8 +27,9 @@ class ViewController {
         return "views/detail"
     }
 
-    @GetMapping("/views/edit")
-    fun editRecipe(): String? {
+    @GetMapping("/views/edit/{id}")
+    fun editRecipe(@PathVariable id: Long?, model: Model): String? {
+        model.addAttribute("id", id)
         return "views/edit"
     }
 }

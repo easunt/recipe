@@ -12,17 +12,21 @@ class Recipe(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    val name: String,
+    var name: String,
     @Column(columnDefinition = "LONGTEXT")
     @Convert(converter = MaterialListConverter::class)
-    val materials: List<Material>,
+    var materials: List<Material>,
     @Column(columnDefinition = "LONGTEXT")
-    val description: String,
-    val note: String?
+    var description: String,
+    var note: String?
 ) : BaseEntity() {
     companion object {
         fun of(recipeRequestBody: RecipeRequestBody): Recipe {
             return Recipe(null, recipeRequestBody.name, recipeRequestBody.materials, recipeRequestBody.description, recipeRequestBody.note)
+        }
+
+        fun of(id: Long, recipeRequestBody: RecipeRequestBody): Recipe {
+            return Recipe(id, recipeRequestBody.name, recipeRequestBody.materials, recipeRequestBody.description, recipeRequestBody.note)
         }
     }
 }

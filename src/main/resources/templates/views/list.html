@@ -28,6 +28,7 @@
                     <!--/* 페이지 Content 영역 */-->
                     <div class="input-group" id="adv-search">
                         <input type="text" id="searchKeyword" class="form-control" placeholder="음료명을 입력해 주세요."
+                               onkeypress="keyPressEventListener(event)"
                                style="width: 300px;"/>
                         <button type="button" class="btn btn-primary" onclick="search()">
                             <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
@@ -85,6 +86,12 @@
         findAll()
     }
 
+    function keyPressEventListener(e) {
+        if (e.code === 'Enter') {
+            search();
+        }
+    }
+
     function search() {
         let searchCondition = document.getElementById('searchKeyword').value
         findAll(searchCondition)
@@ -104,7 +111,7 @@
                 json.forEach((obj, idx) => {
                     html += `
 							<tr>
-    							<td>${idx+1}</td>
+    							<td>${idx + 1}</td>
     							<td class="text-left">
     								<a href="javascript: void(0);" onclick="goView(${obj.id})">${obj.name}</a>
     							</td>
@@ -126,7 +133,7 @@
     }
 
     function goEdit() {
-        location.href = '/views/edit';
+        location.href = '/views/edit/0';
     }
 
     /*]]>*/

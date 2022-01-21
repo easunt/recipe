@@ -29,8 +29,9 @@ class RecipeController(
     }
 
     @PutMapping("/{id}")
-    fun modify(@RequestBody recipe: Recipe) {
-        print("AAAA")
+    fun modify(@PathVariable id: Long, @RequestBody recipeRequestBody: RecipeRequestBody) {
+        val recipe = recipeService.findOne(id)
+        recipeService.update(recipe, recipeRequestBody)
     }
 
     @DeleteMapping("/{id}")

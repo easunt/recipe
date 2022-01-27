@@ -1,15 +1,15 @@
 package com.easunt.recipe.service
 
 import com.easunt.recipe.entity.Recipe
-import com.easunt.recipe.entity.RecipeRepository
-import com.easunt.recipe.model.RecipeRequestBody
+import com.easunt.recipe.entity.ScheduleRepository
+import com.easunt.recipe.model.ScheduleRequestBody
 import org.apache.commons.lang.StringUtils
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class RecipeService(
-    private val recipeRepository: RecipeRepository
+class ScheduleService(
+    private val recipeRepository: ScheduleRepository
 ) {
     fun findAll(name: String?): List<Recipe> {
         return if (StringUtils.isEmpty(name)) {
@@ -26,11 +26,7 @@ class RecipeService(
     }
 
     @Transactional
-    fun update(recipe: Recipe, recipeRequestBody: RecipeRequestBody) {
-        recipe.name = recipeRequestBody.name
-        recipe.description = recipeRequestBody.description
-        recipe.materials = recipeRequestBody.materials
-        recipe.note = recipeRequestBody.note
+    fun update(scheduleRequestBody: ScheduleRequestBody) {
         //recipeRepository.save(recipe)
     }
 
